@@ -1,17 +1,22 @@
+const { connectToMongoDB } = require("./db/connection.js")
+const { ObjectId } = require("mongodb")
+const dotenv = require('dotenv')
 const express = require('express');
 
 const app = express();
 const port = 3000;
 
-// Middleware
-app.use(express.json());
+const router = express.Router()
 
-// Routes
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+let db
 
-// Start server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+dotenv.config({ path: './data/config.env' })
+
+connectToMongoDB().then( (database) => {
+    db = database
+    app.listen(port, () => {
+    console.log(`Listening on port: ${port}`)
+    })
+}).catch( (err) => {
+    console.error("Failed to connect to MongoDB. Server not started:", err)
+})
