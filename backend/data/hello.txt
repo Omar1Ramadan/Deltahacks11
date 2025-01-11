@@ -1,1 +1,3 @@
 this is to not remove this folder
+
+this is the format of the ATLAS_URI=ATLAS_URI=mongodb+srv://<username>:<password>@deltahacks.kgxr8.mongodb.net/?retryWrites=true&w=majority&appName=deltahacks
