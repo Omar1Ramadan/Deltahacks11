@@ -63,5 +63,35 @@ module.exports = (db) => {
     }
   });
 
+  router.get('/getCreditHistory/:id', async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await db.collection('users').findOne({ _id: new ObjectId(userId) }, { projection: { credit_history: 1 } });
+      if (user) {
+        res.status(200).send(user.credit_history);
+      } else {
+        res.status(404).send({ error: 'User not found' });
+      }
+    } catch (error) {
+      console.error("Error getting credit history:", error); // Log the error for debugging
+      res.status(500).send({ error: 'Failed to get credit history' });
+    }
+  });
+
+  router.get('/getAssets/:id', async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await db.collection('users').findOne({ _id: new ObjectId(userId) }, { projection: { assets: 1 } });
+      if (user) {
+        res.status(200).send(user.assets);
+      } else {
+        res.status(404).send({ error: 'User not found' });
+      }
+    } catch (error) {
+      console.error("Error getting assets:", error); // Log the error for debugging
+      res.status(500).send({ error: 'Failed to get assets' });
+    }
+  });
+
   return router;
 };
