@@ -82,7 +82,6 @@ function Loan() {
     return(
         <>
         <div className="display-card">
-            <h1>Talk to Loan Officer</h1>
             <div className="chat-display">
             {messages.map((message, index) => (
                 <div
