@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 function RegisterPopup({ togglePopup }) {
   const [formData, setFormData] = useState({
-    name:"john doe",
+    name:"",
     race:"",
     disability:"",
     salary: "",
