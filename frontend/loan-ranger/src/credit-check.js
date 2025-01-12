@@ -17,12 +17,94 @@ CreditScore=33.25+22.5+1.5+0.3+0.8+0.25−50=108.6*/
 /* FinalCreditScore=Min+( RawMax−RawMin / RawScore−RawMin)⋅(Max−Min)*/
 
 // calculating the payement history
+
+async function fetchCreditData(userId) {
+    try {
+        const response = await fetch(`/credit/getCreditScore/${userId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch credit data: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched credit data:", data);
+        return data.data; // Return the `data` field from the response
+    } catch (error) {
+        console.error("Error fetching credit data:", error);
+        throw error;
+    }
+}
+
+async function fetchCreditHistory(userId) {
+    try {
+        const response = await fetch(`/users/getCreditHistory/${userId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch credit history: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched credit history:", data);
+        return data; // Directly return the array from the response
+    } catch (error) {
+        console.error("Error fetching credit history:", error);
+        throw error;
+    }
+}
+
+export async function calculateCreditScoreFromAPI(userId) {
+    try {
+        // Fetch data from the APIs
+        const creditData = await fetchCreditData(userId);
+        const creditHistory = await fetchCreditHistory(userId);
+
+        console.log("Calculating credit score with fetched data:");
+        console.log("Credit Data:", creditData);
+        console.log("Credit History:", creditHistory);
+
+        // Validate the structure of creditHistory
+        if (!Array.isArray(creditHistory)) {
+            throw new Error("Invalid credit history format: Expected an array.");
+        }
+
+        // Map the data to match what `calculateCreditScore` expects
+        const transactions = creditHistory.map(transaction => ({
+            payment_status: transaction.payment_status,
+            outstanding_balance: transaction.outstanding_balance,
+            amount: transaction.amount,
+            interest_rate: transaction.interest_rate,
+        }));
+
+        // Call `calculateCreditScore` using the mapped data
+        const finalScore = calculateCreditScore(
+            transactions, // Transactions array
+            creditData.totalCreditUsed,
+            creditData.totalCreditLimit,
+            creditData.accountAges,
+            creditData.accountTypes,
+            creditData.hardInquiries,
+            creditData.activeAccounts,
+            creditData.negativeRecords
+        );
+
+        console.log("Final calculated credit score:", finalScore);
+        return finalScore;
+    } catch (error) {
+        console.error("Error calculating credit score from API:", error);
+        throw error;
+    }
+}
+
+
+
+
 function calculatePaymentHistory(transactions) {
     let onTimePayments = 0;
     let totalPayments = 0;
     let totalAmountPaid = 0;
     let totalOutstandingBalance = 0;
     let totalInterestRate = 0;
+
+    console.log("Input to calculatePaymentHistory:", transactions);
+    if (!transactions || !Array.isArray(transactions)) {
+        throw new Error("Invalid transactions data. Expected an array.");
+    }
 
     transactions.forEach(transaction => {
         // Count on-time payments
@@ -179,7 +261,7 @@ function calculateNegativeRecordsPenalty(negativeRecords, penaltyWeights = { def
     return totalPenalty; // Return total penalty as a negative value
 }
 
-function calculateCreditScore(transactions, totalCreditUsed, totalCreditLimit, accountAges, accountTypes, hardInquiries, activeAccounts, negativeRecords) {
+export function calculateCreditScore(transactions, totalCreditUsed, totalCreditLimit, accountAges, accountTypes, hardInquiries, activeAccounts, negativeRecords) {
     // Calculate Payment History (PH)
     const PH = calculatePaymentHistory(transactions);
 
