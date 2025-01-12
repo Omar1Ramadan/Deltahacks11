@@ -11,8 +11,8 @@ function Header({ toggleRegisterPopup, toggleLoginPopup }) {
                     <li><Link to="/userprofile">User Profile</Link></li>
                     <li><Link to="/loan">Loan</Link></li>
                     <li><Link to="/creditscore">Credit Score</Link></li>
-                    <li><button onClick={toggleLoginPopup}>Log In</button></li>
-                    <li><button onClick={toggleRegisterPopup}>Register</button></li>
+                    <li><button className="nav-button" onClick={toggleLoginPopup}>Log In</button></li>
+                    <li><button className="nav-button" onClick={toggleRegisterPopup}>Register</button></li>
                     
                 </ul>
             </nav>

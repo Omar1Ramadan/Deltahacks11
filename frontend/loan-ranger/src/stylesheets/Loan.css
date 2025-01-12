@@ -1,34 +1,49 @@
 .display-card {
+    height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #e0b0b0;
-    padding: 20px;
-    border-radius: 10px;
-    width: 60%;
-    margin: auto;
-    margin-top: 2%;
-  }
-  
-  h1 {
-    background-color: #ffcb9a;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-  
-  .chat-display {
+    background-color: #232323;
+    padding: 10px;
     width: 100%;
-    height: 400px;
-    background-color: #ffe4e4;
-    border: 2px solid #c18c8c;
+    margin: 0;
+    box-sizing: border-box;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    z-index: 1;
+}
+
+.chat-display {
+    width: 95%;
+    height: 85%;
+    background-color: #2c2c2c;
+    border: 1px solid #4a90e2;
     border-radius: 10px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-  }
+    margin-top: 10px;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    width: 95%;
+    height: 15%;
+    padding: 10px;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+h1 {
+    background-color: #ffcb9a;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
   
   .message-box {
     max-width: 60%;
@@ -38,43 +53,49 @@
   }
   
   .message-box.user {
-    background-color: #e5c47c;
-    align-self: flex-start;
-  }
-  
-  .message-box.bot {
-    background-color: #c5d6a7;
+    background-color: #4a90e2;
+    color: white;
     align-self: flex-end;
   }
   
-  .input-area {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    width: 100%;
+  .message-box.bot {
+    background-color: #333333;
+    color: white;
+    align-self: flex-start;
+    border: 1px solid #4a90e2;
   }
   
   input {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #c18c8c;
+    padding: 12px;
+    background-color: #333333;
+    border: 1px solid #4a90e2;
     border-radius: 5px;
+    color: white;
+    font-size: 16px;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #67a7f3;
   }
   
   button {
-    padding: 10px 20px;
-    background-color: #f98e8e;
+    padding: 12px 24px;
+    background-color: #4a90e2;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.2s ease;
   }
   
   button:hover {
-    background-color: #ffb5b5;
+    background-color: #67a7f3;
   }
 
   .message-box-bot{
     font-style: italic;
-    color: gray;
+    color: #999999;
   }
   
