@@ -1,7 +1,7 @@
 const { CohereClientV2 } = require('cohere-ai');
 
 const cohere = new CohereClientV2({
-  token: '55z3APpnyuA6cokVBDcwYJcQ2VTtlTWJwFAqfvDc',
+  token: '<<apiKey>>',
 });
 
 (async () => {
@@ -10,11 +10,10 @@ const cohere = new CohereClientV2({
     messages: [
       {
         role: 'user',
-        content: 'hello world! can you ',
+        content: 'hello world!',
       },
     ],
   });
 
   console.log(response);
-  console.log(response.messages.content)
 })();

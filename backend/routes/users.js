@@ -93,5 +93,24 @@ module.exports = (db) => {
     }
   });
 
+  router.post('/addCreditHistory/:id', async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const newCreditHistory = req.body;
+      const result = await db.collection('users').updateOne(
+        { _id: new ObjectId(userId) },
+        { $push: { credit_history: newCreditHistory } }
+      );
+      if (result.matchedCount === 1) {
+        res.status(200).send({ message: 'Credit history added successfully' });
+      } else {
+        res.status(404).send({ error: 'User not found' });
+      }
+    } catch (error) {
+      console.error("Error adding credit history:", error); // Log the error for debugging
+      res.status(500).send({ error: 'Failed to add credit history' });
+    }
+  });
+
   return router;
 };
