@@ -19,7 +19,7 @@ function RegisterPopup({ togglePopup }) {
             <input type="text" name="ownedHomes" placeholder="Enter Number of Homes Owned" required />
             <input type="text" name="creditHistory" placeholder="Enter Credit History" required />
             <button type="submit">Register</button>
-            <button className="submit" onClick={togglePopup}>X</button>
+            <button className="submit" onClick={togglePopup}>Cancel</button>
 
         </div>
       </div>

@@ -7,18 +7,23 @@ import Profile from "./components/Profile";
 import Loan from "./components/Loan";
 import CreditScore from "./components/CreditScore";
 import RegisterPopup from "./components/RegisterPopup";
+import LoginPopup from "./components/LoginPopup";
 
 function App() {
   const [showRegisterPopup, setShowRegisterPopup] = useState(false)
+  const [showLoginPopup, setShowLoginPopup] = useState(false)
 
   const toggleRegisterPopup = () => {
     setShowRegisterPopup(!showRegisterPopup)
   }
   
+  const toggleLoginPopup = () => {
+    setShowLoginPopup(!showLoginPopup);
+  }
 
   return (
   <Router>
-    <Header toggleRegisterPopup={toggleRegisterPopup}/>
+    <Header toggleRegisterPopup={toggleRegisterPopup} toggleLoginPopup={toggleLoginPopup}/>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/userprofile" element={<Profile />} />
@@ -26,6 +31,7 @@ function App() {
       <Route path="/creditscore" element={<CreditScore />} />
     </Routes>
     {showRegisterPopup && <RegisterPopup togglePopup={toggleRegisterPopup} />}
+    {showLoginPopup && <LoginPopup togglePopup={toggleLoginPopup} />}
   </Router>
   )
 }
