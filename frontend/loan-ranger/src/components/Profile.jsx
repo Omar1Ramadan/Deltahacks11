@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "../stylesheets/Profile.css";
+import { CohereClientV2 } from 'cohere-ai';
+
+const cohere = new CohereClientV2({
+  token: '55z3APpnyuA6cokVBDcwYJcQ2VTtlTWJwFAqfvDc',
+});
 
 function Profile() {
   const [userData, setUserData] = useState(null);
-  const userId = "678394888c867f2a6bae24f2"; // Replace with actual user ID
+  const [resourcesData, setResourcesData] = useState(null);
+  const [loadingResources, setLoadingResources] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasCalledAPI, setHasCalledAPI] = useState(false);
+
+  const userId = "6783ad475225bcaef4052107";
 
   useEffect(() => {
-    // Fetch user data from the backend
     fetch(`/users/getUser/${userId}`)
       .then((response) => {
         if (!response.ok) {
@@ -19,16 +28,109 @@ function Profile() {
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+        setError("Failed to load user data.");
       });
   }, [userId]);
 
+  useEffect(() => {
+    if (!userData || hasCalledAPI) return;
+
+    const { race, location } = userData;
+    if (!race || !location) return;
+
+    console.log("User Data being sent:", { race, location });
+
+    setLoadingResources(true);
+    setHasCalledAPI(true);
+
+    const getCommunityResources = async () => {
+      try {
+        console.log("Making API call to Cohere...");
+        
+        // Create a race-specific system prompt
+        let systemPrompt = `You are a Community Resource Advisor AI. Provide ONLY resources specifically relevant to the ${race} community in ${location.city}. 
+
+Important guidelines:
+1. Only list organizations that specifically serve the ${race} community
+2. Provide up to 5 verified, currently active organizations
+3. Include location and website information
+4. Focus on local organizations in ${location.city} area
+
+Format each resource as:
+**[Organization Name]**
+- Services: [Detailed description of services]
+- Location: [Full address]
+- Website: [website url]`;
+
+        const response = await cohere.chat({
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: `What are the most relevant community resources available for ${race} individuals in ${location.city}, ${location.state}?`
+            }
+          ],
+          model: "command-r7b-12-2024",
+          temperature: 0.3,
+        });
+
+        const aiResponse = response.message.content[0].text;
+        console.log("AI Response:", aiResponse);
+
+        // Simplified resource formatting
+        const resources = aiResponse.split('**')
+          .filter(section => section.trim())
+          .map(section => {
+            const lines = section.split('\n').filter(line => line.trim());
+            const title = lines[0].trim();
+            let services = '';
+            let location = '';
+            let website = '';
+
+            lines.forEach(line => {
+              if (line.includes('Services:')) services = line.split('Services:')[1].trim();
+              if (line.includes('Location:')) location = line.split('Location:')[1].trim();
+              if (line.includes('Website:')) website = line.split('Website:')[1].trim();
+            });
+
+            return {
+              title,
+              description: services,
+              location,
+              link: website
+            };
+          })
+          .filter(resource => resource.title && resource.description);
+
+        setResourcesData({
+          recommendedResources: resources
+        });
+
+      } catch (error) {
+        console.error("Error getting community resources:", error);
+        setError("Failed to load community resources.");
+      } finally {
+        setLoadingResources(false);
+      }
+    };
+
+    getCommunityResources();
+  }, [userData, hasCalledAPI]);
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   if (!userData) {
-    return <p>Loading...</p>; // Show loading state while data is being fetched
+    return <p>Loading user data...</p>;
   }
 
   return (
     <div className="profile-container">
-      <h2 className="profile-title">Welcome Back, {userData.name || "User"}</h2>
+      <h2 className="profile-title">Welcome Back, {userData?.name || "User"}</h2>
 
       {/* Basic Info */}
       <div className="profile-section">
@@ -50,13 +152,15 @@ function Profile() {
       <div className="profile-section">
         <h3>Assets</h3>
         <p>
-          <strong>Cash on Hand:</strong> {userData.assets.financial_assets.cash_and_equivalents.cash_on_hand}
+          <strong>Cash on Hand:</strong>{" "}
+          {userData.assets.financial_assets.cash_and_equivalents.cash_on_hand}
         </p>
         <p>
           <strong>Stocks:</strong> {userData.assets.financial_assets.investments.stocks}
         </p>
         <p>
-          <strong>Residential Properties:</strong> {userData.assets.real_assets.real_estate.residential_properties}
+          <strong>Residential Properties:</strong>{" "}
+          {userData.assets.real_assets.real_estate.residential_properties}
         </p>
         <p>
           <strong>Jewelry:</strong> {userData.assets.personal_assets.jewelry}
@@ -113,6 +217,33 @@ function Profile() {
         <p>
           <strong>Street:</strong> {userData.location.street_address}
         </p>
+      </div>
+
+      {/* AI Community Resources Section */}
+      <div className="profile-section">
+        <h3>Community Resources</h3>
+        {loadingResources ? (
+          <p>Checking for community resources...</p>
+        ) : resourcesData ? (
+          <div>
+            {resourcesData.recommendedResources.map((resource, index) => (
+              <div key={index} className="resource-item">
+                <h4>{resource.title}</h4>
+                <p>{resource.description}</p>
+                {resource.location && <p><strong>Location:</strong> {resource.location}</p>}
+                {resource.link && (
+                  <a href={`https://${resource.link}`} target="_blank" rel="noopener noreferrer">
+                    Visit Website
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          <p>No resources available.</p>
+        )}
       </div>
 
       <div className="profile-actions">

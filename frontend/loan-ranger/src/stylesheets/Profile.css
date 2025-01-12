@@ -80,4 +80,28 @@
     color: #4a90e2;
     margin-right: 8px;
 }
+
+.resource-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #2c2c2c;
+    border: 1px solid #4a90e2;
+    border-radius: 5px;
+}
+
+.resource-item h4 {
+    color: #4a90e2;
+    margin: 0 0 10px 0;
+}
+
+.resource-item a {
+    color: #4a90e2;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.resource-item a:hover {
+    text-decoration: underline;
+}
   
