@@ -72,4 +72,9 @@
   button:hover {
     background-color: #ffb5b5;
   }
+
+  .message-box-bot{
+    font-style: italic;
+    color: gray;
+  }
   
