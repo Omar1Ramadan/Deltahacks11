@@ -1,7 +1,6 @@
 const { connectToMongoDB } = require("./db/connection.js");
 const dotenv = require('dotenv');
 const express = require('express');
-
 // routes for db
 const usersRoute = require('./routes/users'); // Correctly import the users route
 const chatsRoute = require('./routes/chats'); // Import the chats route
