@@ -23,7 +23,6 @@ function calculatePaymentHistory(transactions) {
     let totalAmountPaid = 0;
     let totalOutstandingBalance = 0;
     let totalInterestRate = 0;
-    let activeAccounts = new Set();
 
     transactions.forEach(transaction => {
         // Count on-time payments
@@ -53,27 +52,23 @@ function calculatePaymentHistory(transactions) {
     const paymentHistoryScore = (onTimePayments / totalPayments) * 100; // On-time payment percentage
     const averageOutstandingBalance = totalOutstandingBalance / totalPayments; // Average balance
     const averageInterestRate = totalInterestRate / totalPayments; // Average interest rate
-    const activeAccountsCount = activeAccounts.size; // Total active accounts
 
     // Normalize metrics to percentages
     const normalizedBalanceScore = 100 - Math.min((averageOutstandingBalance / 10000) * 100, 100); // Lower is better
     const normalizedInterestRateScore = 100 - Math.min((averageInterestRate / 20) * 100, 100); // Lower is better
-    const normalizedActiveAccountsScore = Math.min((activeAccountsCount / 10) * 100, 100); // More active accounts is better, capped at 10
 
     // Weights for metrics
     const weights = {
         paymentHistoryScore: 0.5,  // 50% weight
         normalizedBalanceScore: 0.2, // 20% weight
         normalizedInterestRateScore: 0.2, // 20% weight
-        normalizedActiveAccountsScore: 0.1 // 10% weight
     };
 
     // Calculate final Payment History percentage
     const finalPH = (
         (paymentHistoryScore * weights.paymentHistoryScore) +
         (normalizedBalanceScore * weights.normalizedBalanceScore) +
-        (normalizedInterestRateScore * weights.normalizedInterestRateScore) +
-        (normalizedActiveAccountsScore * weights.normalizedActiveAccountsScore)
+        (normalizedInterestRateScore * weights.normalizedInterestRateScore) 
     );
 
     return finalPH.toFixed(2); // Return as a percentage rounded to two decimals
@@ -189,32 +184,55 @@ function calculateNegativeRecordsPenalty(negativeRecords, penaltyWeights = { def
     return totalPenalty; // Return total penalty as a negative value
 }
 
+function calculateCreditScore(transactions, totalCreditUsed, totalCreditLimit, accountAges, accountTypes, hardInquiries, activeAccounts, negativeRecords) {
+    // Calculate Payment History (PH)
+    const PH = calculatePaymentHistory(transactions);
 
+    // Calculate Credit Utilization (CU)
+    const CU = calculateCreditUtilization(totalCreditUsed, totalCreditLimit);
 
-function calculateCreditScore(PH, CU, LCH, CM, RI, AA, N) {
+    // Calculate Length of Credit History (LCH)
+    const LCH = calculateLengthOfCreditHistory(accountAges);
+
+    // Calculate Credit Mix (CM)
+    const CM = calculateCreditMix(accountTypes);
+
+    // Calculate Recent Inquiries Score (RI)
+    const RI = calculateRecentInquiriesScore(hardInquiries);
+
+    // Calculate Active Accounts Score (AA)
+    const AA = calculateActiveAccountsScore(activeAccounts);
+
+    // Calculate Negative Records Penalty (N)
+    const N = calculateNegativeRecordsPenalty(negativeRecords);
+
+    // Weights for each parameter
     const weights = {
-        PH: 0.35,
-        CU: 0.30,
-        LCH: 0.15,
-        CM: 0.10,
-        RI: 0.10,
-        AA: 0.05
+        PH: 0.35, // Payment History (35%)
+        CU: 0.30, // Credit Utilization (30%)
+        LCH: 0.15, // Length of Credit History (15%)
+        CM: 0.10, // Credit Mix (10%)
+        RI: 0.10, // Recent Inquiries (10%)
+        AA: 0.05  // Active Accounts (5%)
     };
 
+    // Calculate the raw score
     const rawScore = (weights.PH * PH) +
-                     (weights.CU * (100 - CU)) +
+                     (weights.CU * CU) +
                      (weights.LCH * LCH) +
                      (weights.CM * CM) +
-                     (weights.RI * (10 - RI)) +
+                     (weights.RI * RI) +
                      (weights.AA * AA) - N;
 
-    const minScore = 300;
-    const maxScore = 850;
-    const rawMin = 0;
-    const rawMax = 100;
+    // Normalize raw score to the final credit score range (300-850)
+    const minScore = 300; // Minimum credit score
+    const maxScore = 850; // Maximum credit score
+    const rawMin = 0;     // Minimum possible raw score
+    const rawMax = 100;   // Maximum possible raw score
 
     const finalCreditScore = minScore + ((rawScore - rawMin) / (rawMax - rawMin)) * (maxScore - minScore);
 
-    return finalCreditScore;
+    return finalCreditScore.toFixed(2); // Return the final credit score rounded to two decimals
 }
+
 
