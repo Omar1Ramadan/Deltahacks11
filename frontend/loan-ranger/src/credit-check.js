@@ -41,11 +41,6 @@ function calculatePaymentHistory(transactions) {
 
         // Sum interest rates
         totalInterestRate += transaction.interest_rate || 0;
-
-        // Track active accounts
-        if (transaction.payment_status === "Active") {
-            activeAccounts.add(transaction.credit_account_id || "unknown");
-        }
     });
 
     // Calculate metrics
