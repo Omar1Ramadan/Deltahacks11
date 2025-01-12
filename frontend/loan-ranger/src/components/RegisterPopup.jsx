@@ -67,6 +67,15 @@ function RegisterPopup({ togglePopup }) {
         <div className="popup">
 
         <input
+          type="string"
+          name="Full Name"
+          placeholder="Enter Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
           type="email"
           name="email"
           placeholder="Enter Email"
@@ -104,16 +113,9 @@ function RegisterPopup({ togglePopup }) {
           onChange={handleChange}
           required
         />
+        
         <input
-          type="text"
-          name="ownedHomes"
-          placeholder="Enter Number of Homes Owned"
-          value={formData.ownedHomes}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
+          type="string"
           name="creditHistory"
           placeholder="Enter Credit History"
           value={formData.creditHistory}
