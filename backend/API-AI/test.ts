@@ -16,5 +16,4 @@ const cohere = new CohereClientV2({
   });
 
   console.log(response);
-  console.log(response.messages.content)
 })();
