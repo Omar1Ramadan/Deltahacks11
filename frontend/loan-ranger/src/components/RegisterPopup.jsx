@@ -6,61 +6,25 @@ function RegisterPopup({ togglePopup }) {
     name:"john doe",
     race:"",
     disability:"",
-    assets: {
-        financial_assets: {
-            cash_and_equivalents: {
-                cash_on_hand: 0,
-                savings_account: 0,
-                checking_account: 0,
-                certificates_of_deposit: 0
-            },
-            investments: {
-                stocks: 0,
-                bonds: 0,
-                mutual_funds: 0,
-                etfs: 0,
-                cryptocurrency: 0,
-                retirement_accounts: 0
-            }
-        },
-        real_assets: {
-            real_estate: {
-                residential_properties: 0,
-                commercial_properties: 0,
-                land: 0,
-                vacation_properties: 0
-            },
-            vehicles: {
-                cars: 0,
-                motorcycles: 0,
-                boats: 0,
-                recreational_vehicles: 0,
-                aircraft: 0
-            }
-        },
-        personal_assets: {
-            jewelry: 0,
-            precious_metals: 0,
-            art_collections: 0,
-            antiques: 0,
-            collectibles: 0
-        }
-    },
-    salary: 0,
-    baseline_credit_score:0,
+    salary: "",
+    baseline_credit_score:"",
     number_of_months_of_loan:"",
+    assets: {
+      cars: "",
+      houses: "",
+    },
     credit_history:[
             {
-            date: "2023-11-15",
-            transaction_type: "New Loan",
-            amount: 10000,
-            on_time_payements:"On Time",
-            outstanding_balance: 10000,
-            payment_status: "Active",
-            creditor_name: "XYZ Bank",
-            credit_account_type: "Personal Loan",
-            interest_rate: 8.5,
-            remarks: "Initial disbursement"
+            date: "",
+            transaction_type: "",
+            // amount: "",
+            // on_time_payements:"",
+            // outstanding_balance: "",
+            // payment_status: "",
+            // creditor_name: "",
+            // credit_account_type: "",
+            // interest_rate: "",
+            // remarks: ""
             }
     ],
     email:"oramadan2004@gmail.com",
@@ -156,6 +120,79 @@ function RegisterPopup({ togglePopup }) {
           onChange={handleChange}
           required
         />
+
+
+<input
+          type="number"
+          name="salary"
+          placeholder="Enter Salary"
+          value={formData.salary}
+          onChange={handleChange}
+          required
+        />
+
+        {/*
+          Here we show how to handle "ASSETS ARE CARS AND HOUSES."
+          We do 'cars' and 'houses' as separate <input> fields.
+        */}
+        <input
+          type="number"
+          name="cars"
+          placeholder="Enter number of cars"
+          value={formData.assets.cars}
+          onChange={handleChange}
+        />
+
+        <input
+          type="number"
+          name="houses"
+          placeholder="Enter number of houses"
+          value={formData.assets.houses}
+          onChange={handleChange}
+        />
+
+        <input
+          type="number"
+          name="baseline_credit_score"
+          placeholder="Enter Baseline Credit Score"
+          value={formData.baseline_credit_score}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="number_of_months_of_loan"
+          placeholder="Enter Number of Months of Loan"
+          value={formData.number_of_months_of_loan}
+          onChange={handleChange}
+        />
+
+        {/*
+          Because credit_history is an array of objects, we’ll just demonstrate
+          controlling the first item. In a real app, you might dynamically map them, etc.
+        */}
+        <input
+          type="text"
+          placeholder="Credit History Date"
+          value={formData.credit_history[0].date}
+          onChange={(e) => {
+            const updated = [...formData.credit_history];
+            updated[0].date = e.target.value;
+            setFormData({ ...formData, credit_history: updated });
+          }}
+        />
+
+        <input
+          type="text"
+          placeholder="Transaction Type"
+          value={formData.credit_history[0].transaction_type}
+          onChange={(e) => {
+            const updated = [...formData.credit_history];
+            updated[0].transaction_type = e.target.value;
+            setFormData({ ...formData, credit_history: updated });
+          }}
+        />
+
         <button type="button" onClick={handleRegister}>
           Register
         </button>
