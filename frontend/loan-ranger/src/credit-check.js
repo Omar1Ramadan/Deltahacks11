@@ -10,11 +10,11 @@ N = Negative Records Penalty (defaults, bankruptcies, accounts in collections)
 
 /* weights assoicated with specfic paramater we will define these*/
 
-/*Credit Score=(0.35⋅95)+(0.30⋅(100−25))+(0.15⋅10)+(0.10⋅3)+(0.10⋅(10−2))+(0.05⋅5)−50
-Credit Score=33.25+22.5+1.5+0.3+0.8+0.25−50=108.6*/
+/*CreditScore=(0.35⋅95)+(0.30⋅(100−25))+(0.15⋅10)+(0.10⋅3)+(0.10⋅(10−2))+(0.05⋅5)−50
+CreditScore=33.25+22.5+1.5+0.3+0.8+0.25−50=108.6*/
 
 
-/* Final Credit Score=Min+( Raw Max−Raw Min / Raw Score−Raw Min)⋅(Max−Min)*/
+/* FinalCreditScore=Min+( RawMax−RawMin / RawScore−RawMin)⋅(Max−Min)*/
 
 // calculating the payement history
 function calculatePaymentHistory(transactions) {

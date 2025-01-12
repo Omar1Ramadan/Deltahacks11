@@ -28,7 +28,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/userprofile" element={<Profile />} />
       <Route path="/loan" element={<Loan />} />
-      <Route path="/creditscore" element={<CreditScore />} />
+      <Route path="/credit_score" element={<CreditScore />} />
     </Routes>
     {showRegisterPopup && <RegisterPopup togglePopup={toggleRegisterPopup} />}
     {showLoginPopup && <LoginPopup togglePopup={toggleLoginPopup} />}
