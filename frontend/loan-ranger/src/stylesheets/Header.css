@@ -2,26 +2,50 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    /* height: auto; */
-    min-height: 20%;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #1a1a1a;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
 }
 
 .links{
     list-style: none;
-    font-size: 24px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
+    align-items: center;
+    gap: 15px;
     margin: 0;
     padding: 0;
+}
+
+/* Unified button and link styles with fixed height */
+.links a, 
+.links button {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 35px;  /* Fixed height instead of padding */
+    background-color: #4a90e2;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 0;
+    padding: 0;  /* Remove padding */
+    transition: background-color 0.2s ease;
 }
 
-.links li{
-    margin-right: 4em;
+.links a:hover, 
+.links button:hover {
+    background-color: #67a7f3;
+    color: white;
 }
 
-.nav{
-    padding: 2%;
-}  
